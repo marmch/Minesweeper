@@ -5,16 +5,16 @@ import java.awt.Font;
 public class Mine extends BasicGame
 {
 	int inputDelta = 0;
-	final float SCALE = 2;
-	final int BOMBGEN = 30;
+	final float SCALE = 1;
+	final int BOMBGEN = 20;
 	boolean youwon = false;
 	static int numopen = 0;
 	int numbombs = 0;
 	int numflags = 0;
-	static int grid[][] = new int[10][10];
-	static int open[][] = new int[10][10];
+	static int grid[][] = new int[20][20];
+	static int open[][] = new int[20][20];
 	Image background, bomb, flag, one, two, three, four, five, six, seven, eight, hidden, blank, smiley;
-	Image[][] imgrid = new Image[10][10];
+	Image[][] imgrid = new Image[20][20];
 	boolean smileypressed = false;
 	boolean yousuck = false;
 	Font font;
@@ -39,27 +39,27 @@ public class Mine extends BasicGame
 		  }
 	  }
 	  for(int i = 0; i < BOMBGEN; i++){
-		  	double x = Math.random()*10;
-		  	double y = Math.random()*10;
+		  	double x = Math.random()*grid.length;
+		  	double y = Math.random()*grid[0].length;
 		  	grid[(int)x][(int)y] = -1;
 		  }
-		  for(int i = 0; i < 10; i++){
-			  for(int j = 0; j < 10; j++){
+		  for(int i = 0; i < grid.length; i++){
+			  for(int j = 0; j < grid[0].length; j++){
 				  if(grid[i][j]==-1){
 					  numbombs++;
 					  if(i==0 && j ==0){
 						  grid[i+1][j+1] += (grid[i+1][j+1] == -1) ? 0 : 1;
 						  grid[i+1][j] += (grid[i+1][j] == -1) ? 0 : 1;
 						  grid[i][j+1] += (grid[i][j+1] == -1) ? 0 : 1;
-					  }else if(i == 0 && j == 9){
+					  }else if(i == 0 && j == grid[0].length-1){
 						  grid[i+1][j] += (grid[i+1][j] == -1) ? 0 : 1;
 						  grid[i][j-1] += (grid[i][j-1] == -1) ? 0 : 1;
 						  grid[i+1][j-1] += (grid[i+1][j-1] == -1) ? 0 : 1;
-					  }else if(i == 9 && j == 0){
+					  }else if(i == grid.length-1 && j == 0){
 						  grid[i-1][j] += (grid[i-1][j] == -1) ? 0 : 1;
 						  grid[i][j+1] += (grid[i][j+1] == -1) ? 0 : 1;
 						  grid[i-1][j+1] += (grid[i-1][j+1] == -1) ? 0 : 1;
-					  }else if(i == 9 && j == 9){
+					  }else if(i == grid.length-1 && j == grid[0].length-1){
 						  grid[i-1][j] += (grid[i-1][j] == -1) ? 0 : 1;
 						  grid[i][j-1] += (grid[i][j-1] == -1) ? 0 : 1;
 						  grid[i-1][j-1] += (grid[i-1][j-1] == -1) ? 0 : 1;
@@ -69,7 +69,7 @@ public class Mine extends BasicGame
 						  grid[i][j+1] += (grid[i][j+1] == -1) ? 0 : 1;
 						  grid[i][j-1] += (grid[i][j-1] == -1) ? 0 : 1;
 						  grid[i+1][j-1] += (grid[i+1][j-1] == -1) ? 0 : 1;
-					  }else if(i == 9){
+					  }else if(i == grid.length-1){
 						  grid[i-1][j] += (grid[i-1][j] == -1) ? 0 : 1;
 						  grid[i][j+1] += (grid[i][j+1] == -1) ? 0 : 1;
 						  grid[i-1][j+1] += (grid[i-1][j+1] == -1) ? 0 : 1;
@@ -81,7 +81,7 @@ public class Mine extends BasicGame
 						  grid[i-1][j+1] += (grid[i-1][j+1] == -1) ? 0 : 1;
 						  grid[i+1][j+1] += (grid[i+1][j+1] == -1) ? 0 : 1;
 						  grid[i+1][j] += (grid[i+1][j] == -1) ? 0 : 1;
-					  }else if(j == 9){
+					  }else if(j == grid[0].length-1){
 						  grid[i-1][j] += (grid[i-1][j] == -1) ? 0 : 1;
 						  grid[i][j-1] += (grid[i][j-1] == -1) ? 0 : 1;
 						  grid[i-1][j-1] += (grid[i-1][j-1] == -1) ? 0 : 1;
@@ -145,7 +145,8 @@ public class Mine extends BasicGame
 			  smileypressed = false;
 			  reset();
 		  }
-		  if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && x >= 50 && x < 50+10*SCALE*24 && y >= 100 && y < 100+10*SCALE*24 && !youwon){
+		  if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && x >= 50 && x < 50+grid.length*SCALE*24 && 
+				  y >= 100 && y < 100+grid[0].length*SCALE*24 && !youwon){
 			  int ax = (int) ((x-50)/(SCALE*24));
 			  int ay = (int)((y-100)/(SCALE*24));
 			  if(open[ax][ay]==0){
@@ -158,7 +159,8 @@ public class Mine extends BasicGame
 			  if(numopen==grid.length*grid[0].length-numbombs)
 				  youwon = true;  
 		  }
-		  if(input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON) && x >= 50 && x < 50+10*SCALE*24 && y >= 100 && y < 100+10*SCALE*24 && !youwon){
+		  if(input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON) && x >= 50 && x < 50+grid.length*SCALE*24 && 
+				  y >= 100 && y < 100+grid[0].length*SCALE*24 && !youwon){
 			  int ax = (int) ((x-50)/(SCALE*24));
 			  int ay = (int)((y-100)/(SCALE*24));
 			  if(open[ax][ay]==0){
@@ -180,8 +182,8 @@ public class Mine extends BasicGame
 	  g.setColor(Color.black);
 	  background.draw();
 	  smiley.draw(500,0);
-	  for(int i = 0; i < 10; i++){
-		  for(int j = 0; j < 10; j++){
+	  for(int i = 0; i < grid.length; i++){
+		  for(int j = 0; j < grid[0].length; j++){
 			  float ax = 50+i*SCALE*24;
 			  float ay = 100+j*SCALE*24;
 			  if(open[i][j]==1 || yousuck || youwon){
