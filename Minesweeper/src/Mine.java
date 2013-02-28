@@ -1,12 +1,14 @@
+import org.lwjgl.LWJGLUtil;
 import org.newdawn.slick.*;
 
 import java.awt.Font;
+import java.io.File;
 
 public class Mine extends BasicGame
 {
 	int inputDelta = 0;
 	final float SCALE = 1;
-	final int BOMBGEN = 20;
+	final int BOMBGEN = 50;
 	boolean youwon = false;
 	static int numopen = 0;
 	int numbombs = 0;
@@ -136,7 +138,7 @@ public class Mine extends BasicGame
 		  Input input = gc.getInput();
 		  int x = input.getMouseX();
 		  int y = input.getMouseY();
-		  if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && x >= 500 && x <= 500 + smiley.getWidth() && y >= 0 && y <= smiley.getHeight()){
+		  if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && x >= 500 && x <= 500 + smiley.getWidth() && y >= 15 && y <= 15+smiley.getHeight()){
 			  smiley = new Image("img\\derpsmiley.png");
 			  smileypressed = true;
 		  }
@@ -181,7 +183,7 @@ public class Mine extends BasicGame
   {
 	  g.setColor(Color.black);
 	  background.draw();
-	  smiley.draw(500,0);
+	  smiley.draw(500,15);
 	  for(int i = 0; i < grid.length; i++){
 		  for(int j = 0; j < grid[0].length; j++){
 			  float ax = 50+i*SCALE*24;
@@ -198,7 +200,7 @@ public class Mine extends BasicGame
 				  	case 6 : six.draw(ax,ay,SCALE);break;
 				  	case 7 : seven.draw(ax,ay,SCALE);break;
 				  	case 8 : eight.draw(ax,ay,SCALE);break;
-				  	default : System.out.println("ANUS");break;	
+				  	default : System.out.println("you broke the game");break;	
 				  }
 			  }
 			  else if(open[i][j]==0)
@@ -209,16 +211,18 @@ public class Mine extends BasicGame
 	  }
 	  g.drawString("Bombs Remaining: " + (numbombs - numflags), 10, 70);
 	  if(yousuck){
-		  trueTypeFont.drawString(150, 250,"YOU SUCK", Color.red);
-		  trueTypeFont.drawString(50, 310, "HUGE BLACK DICK", Color.red);
+		  trueTypeFont.drawString(150, 250,"YOU LOSE", Color.red);
 	  }
 	  else if(youwon){
-		  trueTypeFont.drawString(50, 250,"YOU DON'T SUCK", Color.red);
+		  trueTypeFont.drawString(150, 250,"YOU WIN", Color.red);
+		  numflags = numbombs;
 	  }
   }
  
   public static void main(String[] args) throws SlickException
   {
+	 System.setProperty("org.lwjgl.librarypath", new File(new File(System.getProperty("user.dir"), "native"), LWJGLUtil.getPlatformName()).getAbsolutePath());
+	 System.setProperty("net.java.games.input.librarypath", System.getProperty("org.lwjgl.librarypath"));
      AppGameContainer app = new AppGameContainer(new Mine());
  
      app.setDisplayMode(600, 600, false);
